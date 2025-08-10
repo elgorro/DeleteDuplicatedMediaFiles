@@ -1,4 +1,4 @@
-# Enhanced Delete Duplicated Media Files
+# Delete Duplicated Media Files
 
 A powerful, feature-rich bash script for finding and removing duplicate media files using FFMPEG content hashing.
 
@@ -48,13 +48,13 @@ A powerful, feature-rich bash script for finding and removing duplicate media fi
 
 ```bash
 # Download the enhanced script
-wget https://github.com/yourusername/delete-media-duplicates/raw/main/delete-media-duplicates-enhanced.sh
+wget https://github.com/yourusername/delete-media-duplicates/raw/main/delete-media-duplicates.sh
 
 # Make it executable
-chmod +x delete-media-duplicates-enhanced.sh
+chmod +x delete-media-duplicates.sh
 
 # Optional: Install to system path
-sudo cp delete-media-duplicates-enhanced.sh /usr/local/bin/dedup-media
+sudo cp delete-media-duplicates.sh /usr/local/bin/dedup-media
 ```
 
 ## 📖 Usage Examples
@@ -63,35 +63,35 @@ sudo cp delete-media-duplicates-enhanced.sh /usr/local/bin/dedup-media
 
 ```bash
 # Dry run (default) - see what would be deleted
-./delete-media-duplicates-enhanced.sh /path/to/media
+./delete-media-duplicates.sh /path/to/media
 
 # Actually delete duplicates (requires confirmation)
-./delete-media-duplicates-enhanced.sh --force /path/to/media
+./delete-media-duplicates.sh --force /path/to/media
 ```
 
 ### Advanced Usage
 
 ```bash
 # Keep the highest quality version of each duplicate
-./delete-media-duplicates-enhanced.sh --force --keep best_quality /music
+./delete-media-duplicates.sh --force --keep best_quality /music
 
 # Move duplicates to trash instead of deleting
-./delete-media-duplicates-enhanced.sh --force --trash ~/.trash/media /videos
+./delete-media-duplicates.sh --force --trash ~/.trash/media /videos
 
 # Process only MP3 and FLAC files
-./delete-media-duplicates-enhanced.sh --force --extensions "mp3,flac" /music
+./delete-media-duplicates.sh --force --extensions "mp3,flac" /music
 
 # Use 8 threads for parallel processing
-./delete-media-duplicates-enhanced.sh --force --parallel 8 /large-library
+./delete-media-duplicates.sh --force --parallel 8 /large-library
 
 # Enable caching for repeated runs
-./delete-media-duplicates-enhanced.sh --force --cache ~/.cache/media-hashes.txt /media
+./delete-media-duplicates.sh --force --cache ~/.cache/media-hashes.txt /media
 
 # Non-recursive (current directory only)
-./delete-media-duplicates-enhanced.sh --force --no-recursive /music
+./delete-media-duplicates.sh --force --no-recursive /music
 
 # Full logging with statistics
-./delete-media-duplicates-enhanced.sh --force \
+./delete-media-duplicates.sh --force \
   --log dedup.log \
   --stats stats.json \
   --verbose /media
@@ -172,7 +172,7 @@ The `--stats` option generates JSON statistics:
 ### Music Library Deduplication
 ```bash
 # Keep highest quality, move dupes to trash
-./delete-media-duplicates-enhanced.sh \
+./delete-media-duplicates.sh \
   --force \
   --keep best_quality \
   --trash ~/Music/.duplicates \
@@ -186,7 +186,7 @@ The `--stats` option generates JSON statistics:
 ### Video Archive Cleanup
 ```bash
 # Keep largest files, delete duplicates
-./delete-media-duplicates-enhanced.sh \
+./delete-media-duplicates.sh \
   --force \
   --keep largest \
   --extensions "mp4,mkv,avi,mov" \
@@ -198,7 +198,7 @@ The `--stats` option generates JSON statistics:
 ### Photo Collection
 ```bash
 # Dry run first, then execute
-./delete-media-duplicates-enhanced.sh \
+./delete-media-duplicates.sh \
   --extensions "jpg,jpeg,png,raw,heic" \
   --cache ~/.cache/photo-hashes.txt \
   ~/Pictures
