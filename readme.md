@@ -48,7 +48,7 @@ A powerful, feature-rich bash script for finding and removing duplicate media fi
 
 ```bash
 # Download the enhanced script
-wget https://github.com/elgorro/delete-media-duplicates/raw/main/delete-media-duplicates.sh
+wget https://github.com/elgorro/DeleteDuplicatedMediaFiles/raw/main/delete-media-duplicates.sh
 
 # Make it executable
 chmod +x delete-media-duplicates.sh
