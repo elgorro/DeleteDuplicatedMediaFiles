@@ -2,7 +2,7 @@
 
 # Delete Duplicated Media Files
 # Version 2.0 - Enhanced Edition
-# Original Author: Gregor Witiko Schmidlin
+# Original Author: GWS
 # 
 # Delete duplicated media files by MD5-Checksum with FFMPEG-Codec
 # Now with parallel processing, caching, and advanced features
