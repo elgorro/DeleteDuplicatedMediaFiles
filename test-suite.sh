@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Test Suite for Enhanced Delete Media Duplicates Script
+# Test Suite for Delete Media Duplicates Script
 # Run this to test the functionality of the main script
 
 set -euo pipefail
@@ -12,7 +12,7 @@ readonly YELLOW='\033[1;33m'
 readonly NC='\033[0m'
 
 # Test configuration
-readonly TEST_DIR="test_media_dedup_$$"
+readonly TEST_DIR="test_media_dedup_$"
 readonly SCRIPT_PATH="./delete-media-duplicates.sh"
 
 # Test counters
