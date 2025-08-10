@@ -6,26 +6,26 @@
 ```bash
 # Automatically detect optimal thread count
 THREADS=$(nproc)
-./delete-media-duplicates-enhanced.sh --parallel $THREADS /media
+./delete-media-duplicates.sh --parallel $THREADS /media
 
 # Or manually specify (leave 2 cores free for system)
-./delete-media-duplicates-enhanced.sh --parallel $(($(nproc) - 2)) /media
+./delete-media-duplicates.sh --parallel $(($(nproc) - 2)) /media
 ```
 
 ### 2. Use Hash Caching
 ```bash
 # First run: Generate cache
-./delete-media-duplicates-enhanced.sh --cache ~/.cache/media.db /media
+./delete-media-duplicates.sh --cache ~/.cache/media.db /media
 
 # Subsequent runs: 5-10x faster
-./delete-media-duplicates-enhanced.sh --cache ~/.cache/media.db /media
+./delete-media-duplicates.sh --cache ~/.cache/media.db /media
 ```
 
 ### 3. Process by File Type
 ```bash
 # Process each type separately for better performance
 for ext in mp3 flac m4a; do
-    ./delete-media-duplicates-enhanced.sh \
+    ./delete-media-duplicates.sh \
         --force \
         --parallel 8 \
         --extensions "$ext" \
@@ -62,7 +62,7 @@ sudo mkdir -p /mnt/ramdisk
 sudo mount -t tmpfs -o size=512M tmpfs /mnt/ramdisk
 
 # Use RAM disk for cache
-./delete-media-duplicates-enhanced.sh \
+./delete-media-duplicates.sh \
     --cache /mnt/ramdisk/media_hashes.txt \
     --parallel 8 \
     /media
@@ -86,7 +86,7 @@ for batch in /tmp/batch_*; do
     while IFS= read -r file; do
         dirname "$file"
     done < "$batch" | sort -u | while read -r dir; do
-        ./delete-media-duplicates-enhanced.sh \
+        ./delete-media-duplicates.sh \
             --force \
             --parallel 4 \
             --cache "$CACHE_FILE" \
@@ -108,7 +108,7 @@ rsync -av --include="*.mp3" --include="*.flac" \
       "$REMOTE/" "$LOCAL/"
 
 # Process locally (much faster)
-./delete-media-duplicates-enhanced.sh \
+./delete-media-duplicates.sh \
     --force \
     --parallel 8 \
     --cache ~/.cache/nas_hashes.txt \
@@ -258,10 +258,10 @@ fast_hash() {
 ### 4. Profile Performance
 ```bash
 # Use time and perf for detailed analysis
-time -v ./delete-media-duplicates-enhanced.sh --parallel 8 /media
+time -v ./delete-media-duplicates.sh --parallel 8 /media
 
 # Or with perf
-perf record -g ./delete-media-duplicates-enhanced.sh /media
+perf record -g ./delete-media-duplicates.sh /media
 perf report
 ```
 
@@ -274,7 +274,7 @@ perf report
 
 # Process smaller directories
 find /media -type d -maxdepth 2 | while read dir; do
-    ./delete-media-duplicates-enhanced.sh "$dir"
+    ./delete-media-duplicates.sh "$dir"
 done
 ```
 
@@ -282,7 +282,7 @@ done
 ```bash
 # Use local processing with sync
 rsync -av remote:/media /tmp/local/
-./delete-media-duplicates-enhanced.sh /tmp/local/
+./delete-media-duplicates.sh /tmp/local/
 rsync -av --delete /tmp/local/ remote:/media/
 ```
 
