@@ -1,9 +1,11 @@
 #!/bin/bash
 
-# Enhanced Delete Duplicated Media Files Script
-# Version 2.0
+# Delete Duplicated Media Files
+# Version 2.0 - Enhanced Edition
 # Original Author: Gregor Witiko Schmidlin
-# Enhanced by: Assistant
+# 
+# Delete duplicated media files by MD5-Checksum with FFMPEG-Codec
+# Now with parallel processing, caching, and advanced features
 
 set -euo pipefail  # Exit on error, undefined variables, and pipe failures
 
