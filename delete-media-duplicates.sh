@@ -189,31 +189,30 @@ process_file() {
 # Function: Find media files
 find_media_files() {
     local dir="$1"
-    local find_opts=("-type" "f")
+    local -a find_cmd=("find" "$dir" "-type" "f")
     
     if [[ "$RECURSIVE" == false ]]; then
-        find_opts+=("-maxdepth" "1")
+        find_cmd+=("-maxdepth" "1")
     fi
     
     # Build extension filter
     if [[ -n "$EXTENSIONS" ]]; then
-        local ext_filter="("
+        find_cmd+=("(")
         local first=true
         IFS=',' read -ra EXT_ARRAY <<< "$EXTENSIONS"
         for ext in "${EXT_ARRAY[@]}"; do
             if [[ "$first" == true ]]; then
                 first=false
             else
-                ext_filter+=" -o"
+                find_cmd+=("-o")
             fi
-            ext_filter+=" -iname \"*.${ext}\""
+            find_cmd+=("-iname" "*.${ext}")
         done
-        ext_filter+=" )"
-        
-        eval find "$dir" "${find_opts[@]}" $ext_filter
-    else
-        find "$dir" "${find_opts[@]}"
+        find_cmd+=(")")
     fi
+    
+    # Execute find command
+    "${find_cmd[@]}"
 }
 
 # Function: Select which duplicate to keep
