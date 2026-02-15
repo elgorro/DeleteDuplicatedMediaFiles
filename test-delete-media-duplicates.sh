@@ -224,6 +224,50 @@ test_non_media_file() {
     rm -rf "$dir"
 }
 
+test_multiple_duplicates() {
+    local dir="$TEST_DIR/multi_dupes"
+    mkdir -p "$dir"
+    make_wav "$dir/orig.wav" 440
+    cp "$dir/orig.wav" "$dir/copy1.wav"
+    cp "$dir/orig.wav" "$dir/copy2.wav"
+    cp "$dir/orig.wav" "$dir/copy3.wav"
+    make_wav "$dir/unique.wav" 880
+
+    local out rc=0
+    out=$(bash "$SCRIPT" "$dir" 2>&1) || rc=$?
+    assert_exit 0 "$rc" "multiple duplicates dry-run should succeed"
+    assert_contains "$out" "3 duplicate"
+    assert_contains "$out" "Dry run"
+    # All 5 files should still exist
+    assert_file_exists "$dir/orig.wav"
+    assert_file_exists "$dir/copy1.wav"
+    assert_file_exists "$dir/copy2.wav"
+    assert_file_exists "$dir/copy3.wav"
+    assert_file_exists "$dir/unique.wav"
+
+    rm -rf "$dir"
+}
+
+test_symlinks_skipped() {
+    local dir="$TEST_DIR/symlinks"
+    mkdir -p "$dir"
+    make_wav "$dir/real.wav" 440
+    ln -s "$dir/real.wav" "$dir/link.wav"
+
+    local out rc=0
+    out=$(bash "$SCRIPT" "$dir" 2>&1) || rc=$?
+    assert_exit 0 "$rc" "symlinks should be skipped"
+    assert_contains "$out" "No duplicates found"
+    # Both the real file and symlink should still exist
+    assert_file_exists "$dir/real.wav"
+    if [[ ! -L "$dir/link.wav" ]]; then
+        echo "Expected symlink to still exist: $dir/link.wav"
+        return 1
+    fi
+
+    rm -rf "$dir"
+}
+
 # --- Run all tests ---
 echo "============================================"
 echo " Test suite for delete-media-duplicates.sh"
@@ -242,6 +286,8 @@ run_test "Spaces in directory path" test_spaces_in_directory_path
 run_test "--delete mode removes duplicates" test_delete_mode
 run_test "--verbose shows >>> details" test_verbose_flag
 run_test "Non-media file → warning, skipped" test_non_media_file
+run_test "Multiple duplicates (3+ copies)" test_multiple_duplicates
+run_test "Symlinks are skipped" test_symlinks_skipped
 
 # --- Cleanup ---
 rm -rf "$TEST_DIR"

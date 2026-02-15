@@ -87,7 +87,7 @@ while IFS= read -r -d '' file || [[ -n "$file" ]]; do
 
     md5array+=( "${md5}${DELIM}${file}" )
     ((++count))
-done < <(find "$files_dir" -type f -print0)
+done < <(find "$files_dir" -type f -not -type l -print0)
 
 printf "Analyzed %s files in %s\n\n" "$count" "$files_dir"
 
@@ -154,6 +154,7 @@ fi
 # --- Delete or dry-run ---
 if [[ "$delete_mode" == true ]]; then
     for f in "${dupes[@]}"; do
+        [[ -f "$f" ]] || continue
         echo "Deleting: $f"
         rm -- "$f"
     done
