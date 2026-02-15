@@ -1,26 +1,54 @@
 # Delete Duplicated Media Files
 
-Delete duplicated media files by MD5-Checksum with FFMPEG-Codec on Linux.
+Find and remove duplicate media files by comparing their actual audio/video content — not just filenames or metadata.
 
-## Description
-Normal duplicate finders check the whole file with checksums - so there is a small chance if the ID-Tag or filename is diffrent that a dupe will not identified.
+Traditional duplicate finders hash the entire file, so two files with identical audio but different ID3 tags or filenames slip through. This tool uses [ffmpeg's MD5 muxer](https://ffmpeg.org/ffmpeg-all.html#md5-1) to hash only the decoded media stream, catching duplicates that other tools miss.
 
-With [FFMPEG MD5 Hashes](https://ffmpeg.org/ffmpeg-all.html#md5-1) you can get the MD5 of the media-contnent only.
-`md5=$(ffmpeg -loglevel quiet -v quiet -err_detect ignore_err -i "$file" -f md5 - < /dev/null )`
+## Quick start
 
-Note: this will take some time, because it renders all the detected media files.
-Currently this is because `find "$folder" -type f` will all pass all files from folders with no subfolders `find $files_dir -type d -links 2` to the pipe recursivly. (Feel free to change these to your benefits!) 
-
-This is only tested with music (MP3, FLAC, etc.) but should also work with movies (.AVI, .MP4, etc.) see all supported [FFMPEG codecs here](https://www.ffmpeg.org/ffmpeg-codecs.html).
-
-Because it is rendering all media files (to `null`) to get the hashes, it could take a long time or crash your system. Feel free to analize less files at one time.
-
-## Use
+```bash
+# Dry-run: find duplicates without deleting anything
 ./delete-media-duplicates.sh /path/to/media/
 
-If you have ":" in your filenames it probably will not work, then change `cut -f1 -d":"` and `cut -f2 -d":"` to something you dont have in filenames.
+# Delete duplicates (keeps one copy of each)
+./delete-media-duplicates.sh --delete /path/to/media/
 
-For security reasons for now i implemented a `echo "rm $f"`, which will only output all dupes!
+# Verbose output
+./delete-media-duplicates.sh --verbose /path/to/media/
+```
 
-## Know Issues
-- Whitespaces in script param crash the execution - be aware, this can perhaps delete unwanted dupes!!
+## Requirements
+
+- **Bash** 4.0+
+- **[ffmpeg](https://ffmpeg.org/)**
+
+## Options
+
+| Flag        | Description                                   |
+|-------------|-----------------------------------------------|
+| `--delete`  | Remove duplicates (default is dry-run)        |
+| `--verbose` | Show per-file processing details              |
+| `--help`    | Show usage information                        |
+
+## Supported formats
+
+Any format ffmpeg can decode: MP3, FLAC, WAV, OGG, AAC, MP4, AVI, MKV, and [many more](https://www.ffmpeg.org/ffmpeg-codecs.html). Non-media files are skipped with a warning.
+
+## Documentation
+
+See the [docs/](docs/) folder for detailed guides:
+
+- [Usage](docs/usage.md) — full usage instructions and performance notes
+- [Development](docs/development.md) — project structure and design decisions
+- [Testing](docs/testing.md) — running and extending the test suite
+
+## Acknowledgments
+
+Built on the shoulders of two giants:
+
+- **[ffmpeg](https://ffmpeg.org/)** — the Swiss Army knife of media processing, making content-based hashing possible
+- **[Bash](https://www.gnu.org/software/bash/)** & the **GNU/Linux coreutils** — proving that shell scripts can still get serious work done
+
+## License
+
+[MIT](license.txt)
